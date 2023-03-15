@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Thank you here is the info that you gave us</h1>
+{% for mess in get_flashed_messages() %}
+    <div class="alert alert-warning alert-dismissible fade show" role='alert'>
+        <button type="button" class="fade close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ mess }}
+    </div>
+{% endfor %}
+
+<ul>
+    <li>Breed: {{ session['breed'] }}</li>
+    <li>neautered: {{ session['neutered'] }}</li>
+    <li>mood: {{ session['mood'] }}</li>
+    <li>food choice: {{session['food_choice'] }}</li>
+    <li>feedback: {{ session['feedback'] }}</li>
+</ul>
+<!-- <p>thank you for singing up {{first}} {{last}}</p> -->
+{% endblock %}

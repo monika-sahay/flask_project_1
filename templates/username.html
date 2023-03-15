@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Welcome to the username check site</h1>
+<p>Let's see if your Username is secure</p>
+<p>fill out the form below that have the following strains</p>
+<li>must have an uppercase in the user name</li>
+<li>must have a lowercase in the user name</li>
+<li>must have a number at the end</li>
+<form action="{{url_for('check')}}">
+    <label for="username">User name</label>
+    <input type="text" name="username">
+    <input type="submit" value="Submit form">
+</form>
+{% endblock %}

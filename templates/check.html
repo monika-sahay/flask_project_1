@@ -1,0 +1,21 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<p>Let's check your username</p>
+{% if check %}
+    <p>You're username passed all checks</p>
+{% else %}
+    <ul>
+        {% if not lower %}
+        <li>you did not used a lowercase letter</li>
+        {% endif %}
+        {% if not upper %}
+        <li>you did not used an uppercase letter</li>
+        {% endif %}
+        {% if not num %}
+        <li> you did not end in a number</li>
+        {% endif %}
+    </ul>
+
+{% endif %}
+{% endblock %}

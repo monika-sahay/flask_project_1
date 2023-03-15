@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1> Hi {{name}} welcome to my site</h1>
+    <h1>{{letters}}</h1>
+    <ul>
+        {% for item in letters %}
+        <li>{{item}}</li>
+        {% endfor %}
+    </ul>
+        {% if 'Moni' in letters %}
+            <p>Found you moni</p>
+
+        {% endif %}
+    
+    <h2>Here is an image of ganeshji,{{pic_dict['ganish']}}</h2>
+    <img src="../static/pic.jpg" alt="">
+</body>
+</html>
