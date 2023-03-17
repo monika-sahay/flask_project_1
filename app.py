@@ -1,73 +1,171 @@
 ##################################################
-############# Crreaating models ##################
+############creating a website with database #####
 ##################################################
 ##################################################
 import os
-from flask import Flask
+from form import AddForm, DeleteForm
+from flask import Flask, render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from form import AddForm, DelForm
 
-basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir,'data.sqlite')
+app.config['SECRET_KEY'] = 'mysecretkey'
+
+
+##### sql data base section 
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 
 db = SQLAlchemy(app)
 Migrate(app, db)
 
 
-class Puppy(db.Model):
-    # Manual table name choice
-    __tablename__ = 'puppies'
+################################
+################################
+########## Model ###############
+################################
+################################
+
+class puppy(db.model):
+    __tablename__ = puppies
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text)
-    age = db.Column(db.Integer)
-    ## One to many
-    ## Puppy to many toys......
-    toys = db.relationship('Toy', backref='puppy', lazy='dynamic')
-    ## One to One
-    ## One puppy --- one ownner
-    owner = db.relationship('Owner', backref='puppy', uselist=False)
+    # age = db.Column(db.Integer)
 
-    def __init__(self, name, age):
+    def __init__(self):
         self.name = name
-        self.age = age
 
     def __repr__(self):
-        return f'name:{self.name}| age:{self.age}'
+        return f'puppy name: {self.name}'
 
 
-    def report_toys(self):
-        print('Here are my toys')
-        for toy in self.toys:
-            print(toy.item_name)
+#######################################
+########## view functions #############
+#######################################
+
+@app.route('/')
+def index():
+    return render_template('home.html')
+
+@app.route('/add', methods=['GET', 'POST'])
+def add_ppup():
+    form = AddForm()
+
+    if form.validate_on_submit():
+
+        name = form.name.data
+
+        new_pup = Puppy(name)
+        db.session.add(new_pup)
+        db.session.commit()
+
+        return redirect(url_for('list_pup'))
+
+    return render_template('add.html', form=form)
 
 
-class Toy(db.Model):
-    __tablename__ = 'toys'
+@app.route('/list')
+def list_pup():
+    puppies = Puppy.query.all()
 
-    id = db.Column(db.Integer, primary_key=True)
-    item_name = db.Column(db.Text)
-    puppy_id = db.Column(db.Integer, db.ForeignKey('puppies.id'))
-
-    def __init__(self, item_name, puppy_id):
-        self.item_name = item_name
-        self.puppy_id = puppy_id
+    return render_template('list.html', puppies=puppies)
 
 
+@app.route('/delete')
+def del_pup():
+    
+    form = DelForm()
 
-class owner(db.Model):
-    __tablename__ = 'owners'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text)
+    if form.validate_on_submit():
 
-    puppy_id = db.Column(db.Integer, db.ForeignKey('puppies.id'))
+        id = form.id.data
+        pup = Puppy.query.get(id)
+        db.session.delete(pup)
+        db.session.commit()
 
-    def __init__(self, name, puppy_id):
-        self.name = name
-        self.puppy_id = puppy_id
+        return redirect(url_for('list_pup'))
+
+    return render_template('delete.html', form=form)
+
+
+
+
+
+##################################################
+############# Crreaating models ##################
+##################################################
+##################################################
+# import os
+# from flask import Flask
+# from flask_sqlalchemy import SQLAlchemy
+# from flask_migrate import Migrate
+
+# basedir = os.path.abspath(os.path.dirname(__file__))
+
+# app = Flask(__name__)
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir,'data.sqlite')
+# app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
+
+# db = SQLAlchemy(app)
+# Migrate(app, db)
+
+
+# class Puppy(db.Model):
+#     # Manual table name choice
+#     __tablename__ = 'puppies'
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.Text)
+#     age = db.Column(db.Integer)
+#     ## One to many
+#     ## Puppy to many toys......
+#     toys = db.relationship('Toy', backref='puppy', lazy='dynamic')
+#     ## One to One
+#     ## One puppy --- one ownner
+#     owner = db.relationship('Owner', backref='puppy', uselist=False)
+
+#     def __init__(self, name, age):
+#         self.name = name
+#         self.age = age
+
+#     def __repr__(self):
+#         return f'name:{self.name}| age:{self.age}'
+
+
+#     def report_toys(self):
+#         print('Here are my toys')
+#         for toy in self.toys:
+#             print(toy.item_name)
+
+
+# class Toy(db.Model):
+#     __tablename__ = 'toys'
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     item_name = db.Column(db.Text)
+#     puppy_id = db.Column(db.Integer, db.ForeignKey('puppies.id'))
+
+#     def __init__(self, item_name, puppy_id):
+#         self.item_name = item_name
+#         self.puppy_id = puppy_id
+
+
+
+# class owner(db.Model):
+#     __tablename__ = 'owners'
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.Text)
+
+#     puppy_id = db.Column(db.Integer, db.ForeignKey('puppies.id'))
+
+#     def __init__(self, name, puppy_id):
+#         self.name = name
+#         self.puppy_id = puppy_id
 
     
 

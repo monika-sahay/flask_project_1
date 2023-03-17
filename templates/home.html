@@ -7,6 +7,15 @@
     <p>This is the home page </p>
     <p>singup here</p>
     <a href="{{ url_for('signup_form')}}">signup form here</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="navbar-nav">
+            <a clas="nav-item nav-link" href="{{ url_for('index')}}">Home</a>
+            <a clas="nav-item nav-link" href="{{ url_for('add_pup')}}">Add puppies</a>
+            <a clas="nav-item nav-link" href="{{ url_for('list_pup')}}">List puppies</a>
+            <a clas="nav-item nav-link" href="{{ url_for('del_pup')}}">delete puppies</a>
+        </div>
+
+    </nav>
 </div>
 
 
