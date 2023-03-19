@@ -3,7 +3,7 @@
 ##################################################
 ##################################################
 import os
-from form import AddForm, DeleteForm
+from form import AddForm, DeleteForm, OwnerForm
 from flask import Flask, render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -44,8 +44,8 @@ class Puppy(db.Model):
     def __repr__(self):
 
         if self.owner:
-            return f'puppy owner is {self.owner}'
-        return f'puppy name: {self.name}'
+            return f'puppy owner is {self.owner.name}'
+        return f'puppy name: {self.name} | puppy id: {self.id}'
 
 
 class Owner(db.Model):
@@ -109,7 +109,7 @@ def del_pup():
     return render_template('delete.html', form=form)
 
 @app.route('/owner', methods=['GET','POST'])
-def owner(self):
+def owner():
     form = OwnerForm()
 
     if form.validate_on_submit():
