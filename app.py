@@ -1,129 +1,142 @@
-##################################################
-############creating a website with database #####
-##################################################
-##################################################
-import os
-from form import AddForm, DeleteForm, OwnerForm
-from flask import Flask, render_template, url_for, redirect
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from form import AddForm, DeleteForm
-
-
-app = Flask(__name__)
-
-app.config['SECRET_KEY'] = 'mysecretkey'
-
-
-##### sql data base section 
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir, 'data.sqlite')
-app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
-
-db = SQLAlchemy(app)
-Migrate(app, db)
-
-
-################################
-################################
-########## Model ###############
-################################
-################################
-
-class Puppy(db.Model):
-    __tablename__ = 'puppies'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text)
-    owner = db.relationship('Owner', backref='puppies')
-    # age = db.Column(db.Integer)
-
-    def __init__(self,name):
-        self.name = name
-
-    def __repr__(self):
-
-        if self.owner:
-            return f'puppy owner is {self.owner.name}'
-        return f'puppy name: {self.name} | puppy id: {self.id}'
-
-
-class Owner(db.Model):
-    __tablename__ = "owners"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text)
-    puppy_id = db.Column(db.Integer, db.ForeignKey('puppies.id'))
-
-    def __init__(self, name, puppy_id):
-        self.name = name
-        self.puppy_id = puppy_id
-
-
-#######################################
-########## view functions #############
-#######################################
+#################################################
+####creating websites with blue prints###########
+#################################################
+from myproject import app
+from flask import render_template
 
 @app.route('/')
 def index():
     return render_template('home.html')
 
-@app.route('/add', methods=['GET', 'POST'])
-def add_pup():
-    form = AddForm()
-
-    if form.validate_on_submit():
-
-        name = form.name.data
-
-        new_pup = Puppy(name)
-        db.session.add(new_pup)
-        db.session.commit()
-
-        return redirect(url_for('list_pup'))
-
-    return render_template('add.html', form=form)
 
 
-@app.route('/list')
-def list_pup():
-    puppies = Puppy.query.all()
 
-    return render_template('list.html', puppies=puppies)
+##################################################
+############creating a website with database #####
+##################################################
+##################################################
+# import os
+# from form import AddForm, DeleteForm, OwnerForm
+# from flask import Flask, render_template, url_for, redirect
+# from flask_sqlalchemy import SQLAlchemy
+# from flask_migrate import Migrate
+# from form import AddForm, DeleteForm
 
 
-@app.route('/delete',methods=['GET', 'POST'])
-def del_pup():
+# app = Flask(__name__)
+
+# app.config['SECRET_KEY'] = 'mysecretkey'
+
+
+# ##### sql data base section 
+# basedir = os.path.abspath(os.path.dirname(__file__))
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir, 'data.sqlite')
+# app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
+
+# db = SQLAlchemy(app)
+# Migrate(app, db)
+
+
+# ################################
+# ################################
+# ########## Model ###############
+# ################################
+# ################################
+
+# class Puppy(db.Model):
+#     __tablename__ = 'puppies'
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.Text)
+#     owner = db.relationship('Owner', backref='puppies')
+#     # age = db.Column(db.Integer)
+
+#     def __init__(self,name):
+#         self.name = name
+
+#     def __repr__(self):
+
+#         if self.owner:
+#             return f'puppy owner is {self.owner.name}'
+#         return f'puppy name: {self.name} | puppy id: {self.id}'
+
+
+# class Owner(db.Model):
+#     __tablename__ = "owners"
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.Text)
+#     puppy_id = db.Column(db.Integer, db.ForeignKey('puppies.id'))
+
+#     def __init__(self, name, puppy_id):
+#         self.name = name
+#         self.puppy_id = puppy_id
+
+
+# #######################################
+# ########## view functions #############
+# #######################################
+
+# @app.route('/')
+# def index():
+#     return render_template('home.html')
+
+# @app.route('/add', methods=['GET', 'POST'])
+# def add_pup():
+#     form = AddForm()
+
+#     if form.validate_on_submit():
+
+#         name = form.name.data
+
+#         new_pup = Puppy(name)
+#         db.session.add(new_pup)
+#         db.session.commit()
+
+#         return redirect(url_for('list_pup'))
+
+#     return render_template('add.html', form=form)
+
+
+# @app.route('/list')
+# def list_pup():
+#     puppies = Puppy.query.all()
+
+#     return render_template('list.html', puppies=puppies)
+
+
+# @app.route('/delete',methods=['GET', 'POST'])
+# def del_pup():
     
-    form = DeleteForm()
+#     form = DeleteForm()
 
-    if form.validate_on_submit():
+#     if form.validate_on_submit():
 
-        id = form.id.data
-        pup = Puppy.query.get(id)
-        db.session.delete(pup)
-        db.session.commit()
+#         id = form.id.data
+#         pup = Puppy.query.get(id)
+#         db.session.delete(pup)
+#         db.session.commit()
 
-        return redirect(url_for('list_pup'))
+#         return redirect(url_for('list_pup'))
 
-    return render_template('delete.html', form=form)
+#     return render_template('delete.html', form=form)
 
-@app.route('/owner', methods=['GET','POST'])
-def owner():
-    form = OwnerForm()
+# @app.route('/owner', methods=['GET','POST'])
+# def owner():
+#     form = OwnerForm()
 
-    if form.validate_on_submit():
+#     if form.validate_on_submit():
 
-        puppy_id = form.id.data
-        owner_name = form.name.data
+#         puppy_id = form.id.data
+#         owner_name = form.name.data
 
-        new_owner = Owner(owner_name, puppy_id)
+#         new_owner = Owner(owner_name, puppy_id)
 
-        db.session.add(new_owner)
-        db.session.commit()
+#         db.session.add(new_owner)
+#         db.session.commit()
 
-        return redirect(url_for('list_pup'))
-    return render_template('owner.html', form=form)
+#         return redirect(url_for('list_pup'))
+#     return render_template('owner.html', form=form)
 
 
 

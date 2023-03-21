@@ -10,10 +10,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="navbar-nav">
             <a clas="nav-item nav-link" href="{{ url_for('index')}}">Home</a>
-            <a clas="nav-item nav-link" href="{{ url_for('add_pup')}}">Add puppies</a>
-            <a clas="nav-item nav-link" href="{{ url_for('list_pup')}}">List puppies</a>
-            <a clas="nav-item nav-link" href="{{ url_for('del_pup')}}">delete puppies</a>
-            <a clas="nav-item nav-link" href="{{ url_for('owner')}}">owner</a>
+            <a clas="nav-item nav-link" href="{{ url_for('puppies.add_pup')}}">Add puppies</a>
+            <a clas="nav-item nav-link" href="{{ url_for('puppies.list_pup')}}">List puppies</a>
+            <a clas="nav-item nav-link" href="{{ url_for('puppies.del_pup')}}">delete puppies</a>
+            <a clas="nav-item nav-link" href="{{ url_for('owner.owner')}}">owner</a>
         </div>
 
     </nav>
